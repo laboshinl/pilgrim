@@ -1,0 +1,12 @@
+<html>
+<head>
+<title>Salt API</title>
+<link rel="shortcut icon" type="image/x-icon" href="{{ STATIC_URL }}favicon.ico">
+</head>
+<body>
+<form action="/contact/" method="post">{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Submit" />
+</form>
+</body>
+</html>
