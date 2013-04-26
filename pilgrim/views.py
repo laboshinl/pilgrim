@@ -38,28 +38,39 @@ def ping(request, tgt):
 
 @wildcardtarget
 def sys(request, tgt):
-    client = get_salt_client()
-    ret = client.cmd(tgt, 'sys.doc', ret='json')
+    client = get_api_client()
+    lowstate = {'client': 'local', 'tgt': '*', 'fun': 'sys.doc', 'arg': ''}
+    ret = client.run(lowstate)
     return JsonResponse(ret)
 
 @wildcardtarget
 def pkg(request, tgt, arg):
-    client = get_salt_client()
-    ret = client.cmd(tgt, 'pkg.install', arg, ret='json')
+    client = get_api_client()
+    lowstate = {'client': 'local', 'tgt': tgt, 'fun': 'pkg.install', 'arg': [arg]}
+    ret = client.run(lowstate)
     return JsonResponse(ret)
 
 @wildcardtarget
 def keys(request):
-    client = get_salt_client()
-    ret = client.cmd('wheel', '*', 'key.list_all', ret='json')
+    client = get_api_client()
+    lowstate = {'client': 'wheel', 'tgt': '*', 'fun': 'key.list_all', 'arg': ''}
+    ret = client.run(lowstate)
     return JsonResponse(ret)
 
 @wildcardtarget
 def run(request, tgt, arg):
-    client = get_salt_client()
-    ret = client.cmd(tgt, 'cmd.run', arg, ret='json')
+    client = get_api_client()
+    lowstate = {'client': 'local', 'tgt': tgt, 'fun': 'cmd.run', 'arg': [arg]}
+    ret = client.run(lowstate)
     return JsonResponse(ret)
 
+@wildcardtarget
+def sls(request, tgt, arg):
+    client = get_api_client()
+    lowstate = {'client': 'local', 'tgt': tgt, 'fun': 'state.sls', 'arg': [arg]}
+    ret = client.run(lowstate)
+    return JsonResponse(ret)
+    
 #@login_required
 @wildcardtarget
 def echo(request, tgt, arg):
@@ -127,16 +138,3 @@ def apiwrapper(request):
     elif request.method == 'GET':
         return render(request, 'index.html')
         
-#def contact(request):
-#    if request.method == 'POST': # If the form has been submitted...
-#        form = ContactForm(request.POST) # A form bound to the POST #data
-#        if form.is_valid(): # All validation rules pass
-            # Process the data in form.cleaned_data
-            # ...
-#            return HttpResponseRedirect('/thanks/') # Redirect after #POST
-#    else:
-#        form = ContactForm() # An unbound form
-#
-#    return render(request, 'index.html', {
-#        'form': form,
-#    })

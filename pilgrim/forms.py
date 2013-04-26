@@ -4,7 +4,7 @@ from django import forms
 
 class LowdataForm(forms.Form):
     client = forms.CharField(max_length=20,
-                             initial='local',
+							 initial='local_async',
                              widget=forms.HiddenInput())
     tgt    = forms.CharField(max_length=50,
                              label='Target')
@@ -18,13 +18,3 @@ class LowdataForm(forms.Form):
         cleaned_data = super(LowdataForm, self).clean()
         return cleaned_data
 
-# class ModuleField(CharField):
-#     default_error_messages = {
-#         'invalid': _('A Salt module must have the form foo.bar.'),
-#         }
-#     default_validators = [validators.validate_email]
-#class ContactForm(forms.Form):
-#    subject = forms.CharField(max_length=100)
-#    message = forms.CharField()
-#    sender = forms.EmailField()
-#    cc_myself = forms.BooleanField(required=False)
